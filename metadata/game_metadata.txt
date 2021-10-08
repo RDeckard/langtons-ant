@@ -1,0 +1,6 @@
+devid=rdeckard
+devtitle=Rick Deckard
+gameid=langtons-ant
+gametitle="Langton's Ant"
+version=0.1
+icon=assets/images/ant.png

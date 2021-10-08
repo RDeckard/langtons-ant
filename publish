@@ -1,0 +1,7 @@
+#!/bin/sh
+cd "`dirname "$0"`"
+
+DIR_AND_SUBDIR=$(pwd | grep -o '[^/]*/[^/]*$')
+
+cd ../..
+exec ./dragonruby-publish "$@" $DIR_AND_SUBDIR
