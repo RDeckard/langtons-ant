@@ -1,4 +1,4 @@
-class Menu < Tool
+class Menu < GTKObject
   attr_reader :updated_labels
 
   def initialize(prompts:, x: grid.w / 2, y: grid.h / 2, mode: :sequential)

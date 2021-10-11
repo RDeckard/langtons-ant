@@ -1,7 +1,7 @@
-class Pause < Scene
+class Pause < GTKObject
   def initialize(current_step:)
     @current_step = current_step
-    @text_box = TextBox.new(text_lines, text_alignment: :right)
+    @text_box = TextBox.new(text_lines, box_alignment: :right, box_alignment_h: :top, text_alignment: :right)
   end
 
   def tick
@@ -18,11 +18,11 @@ class Pause < Scene
   end
 
   def text_lines
-    @text_lines ||= [
+    [
       "PAUSE",
       "--- Shortcuts ---",
       "Toggle fullscreen: Alt+F",
-      "Pause: click or enter",
+      "Pause: Click or ENTER",
       "Reset: Alt+R",
       "Quit: Alt+Q",
       "--- Configuration ---",

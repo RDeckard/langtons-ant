@@ -1,4 +1,4 @@
-class CustomizeCells < Scene
+class CustomizeCells < GTKObject
   def initialize
     grid_width  = state.game_params.screen_size
     grid_height = grid_width * 9/16

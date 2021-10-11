@@ -1,4 +1,4 @@
-class ConfMenu < Scene
+class ConfMenu < GTKObject
   def initialize
     @menu = Menu.new(prompts: prompts)
   end
@@ -12,13 +12,18 @@ class ConfMenu < Scene
     outputs.static_primitives << @menu.updated_labels
     outputs.static_primitives << [
       {
+        x: grid.left.shift_right(5), y: grid.top.shift_down(25),
+        text: "",
+        size_enum: 2
+      }.label!,
+      {
         x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
-        text: "ESCAPE: Previous",
+        text: "ESCAPE: Previous/exit",
         size_enum: 2
       }.label!,
       {
         x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
-        text: "ENTER: Next",
+        text: "Click/ENTER: Next",
         size_enum: 2,
         alignment_enum: 2
       }.label!

@@ -1,12 +1,11 @@
 require "lib/serializable.rb"
 require "lib/spriteable.rb"
-require "lib/scene.rb"
-require "lib/model.rb"
-require "lib/tool.rb"
+require "lib/gtk_object.rb"
 require "lib/tools/prompt.rb"
 require "lib/tools/menu.rb"
 require "lib/tools/text_box.rb"
 require "app/scenes/benchmark.rb"
+require "app/scenes/title_screen.rb"
 require "app/scenes/conf_menu.rb"
 require "app/models/cells_grid.rb"
 require "app/scenes/customize_cells.rb"
@@ -17,7 +16,7 @@ require "app/scenes/pause.rb"
 def tick(args)
   set_defaults if args.state.tick_count.zero?
 
-  args.state.current_scene ||= ConfMenu.new
+  args.state.current_scene ||= TitleScreen.new
   # args.state.current_scene ||= Bchmk.new
 
   debug

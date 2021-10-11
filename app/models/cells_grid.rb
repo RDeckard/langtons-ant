@@ -1,4 +1,4 @@
-class CellsGrid < Model
+class CellsGrid < GTKObject
   WHITE_AND_BLACK = [
       { r: 255, g: 255, b: 255 }.freeze,
       { r: 0,   g: 0,   b: 0 }.freeze,
@@ -135,7 +135,7 @@ class CellsGrid < Model
     @lines
   end
 
-  class Cell < Model
+  class Cell < GTKObject
     include Spriteable
 
     attr_reader :x_grid, :y_grid

@@ -1,9 +1,11 @@
-class TextBox < Tool
-  def initialize(text_lines, text_size: 0, text_alignment: :left, offset: 5)
-    @text_lines     = text_lines
-    @text_size      = text_size
-    @text_alignment = text_alignment
-    @offset         = offset
+class TextBox < GTKObject
+  def initialize(text_lines, text_size: 0, box_alignment: :center, box_alignment_h: :center, text_alignment: :left, offset: 5)
+    @text_lines      = text_lines
+    @text_size       = text_size
+    @box_alignment   = box_alignment
+    @box_alignment_h = box_alignment_h
+    @text_alignment  = text_alignment
+    @offset          = offset
   end
 
   def primitives
@@ -16,17 +18,35 @@ class TextBox < Tool
     line_h += @offset
     box_h = @offset + @text_lines.size*line_h
 
-    @primitives << {
-      x: grid.right.shift_left(@offset + box_w),
-      y: grid.top.shift_down(@offset + box_h),
-      w: box_w, h: box_h,
-      a: 128
-    }.solid!
+    box = { w: box_w, h: box_h, a: 128 }.solid!
+
+    box.x =
+      case @box_alignment
+      when :center then geometry.center_inside_rect_x(box, grid).x
+      when :left   then grid.left.shift_right(@offset)
+      when :right  then grid.right.shift_left(@offset + box_w)
+      end
+
+    box.y =
+      case @box_alignment_h
+      when :center then geometry.center_inside_rect_y(box, grid).y
+      when :top    then grid.top.shift_down(@offset + box_h)
+      when :bottom then grid.bottom.shift_up(@offset)
+      end
+
+    @primitives << box
 
     @primitives << @text_lines.map.with_index do |text, index|
+      x =
+        case @text_alignment
+        when :left   then box.x.shift_right(@offset)
+        when :center then box.x + 0.5*box.w
+        when :right  then (box.x + box.w).shift_left(@offset)
+        end
+
       {
-        x: grid.right.shift_left(@offset*2),
-        y: grid.top.shift_down(@offset*2 + line_h*index),
+        x: x,
+        y: (box.y + box.h).shift_down(@offset + line_h*index),
         text: text,
         size_enum: @text_size,
         alignment_enum: %i[left center right].index(@text_alignment),

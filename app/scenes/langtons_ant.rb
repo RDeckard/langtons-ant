@@ -1,4 +1,4 @@
-class LangtonsAnt < Scene
+class LangtonsAnt < GTKObject
   def initialize(cells_grid, ant)
     @cells_grid = cells_grid
     @ant = ant
@@ -68,6 +68,12 @@ class LangtonsAnt < Scene
     outputs.static_primitives << @cells_grid.cells
     outputs.static_primitives << @ant
     outputs.static_primitives << @cells_grid.lines
+
+    outputs.static_primitives << {
+      x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
+      text: "Click/ENTER: pause & details",
+      size_enum: 2
+    }.label!
 
     @render = true
   end

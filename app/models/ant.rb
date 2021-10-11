@@ -1,4 +1,4 @@
-class Ant < Model
+class Ant < GTKObject
   include Spriteable
 
   IMAGE = "assets/images/ant.png".freeze
