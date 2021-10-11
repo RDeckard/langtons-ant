@@ -1,6 +1,7 @@
 devid=rdeckard
 devtitle=Rick Deckard
 gameid=langtons-ant
-gametitle="Langton's Ant"
+gametitle=LangtonsAnt
 version=0.1
 icon=assets/images/ant.png
+compile_ruby=true

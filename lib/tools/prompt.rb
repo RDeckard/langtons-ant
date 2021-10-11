@@ -4,13 +4,16 @@ class Prompt < Tool
 
   attr_reader :updated_labels
 
-  def initialize(title: "", default_value: "", cursor: "_", size: 2, alignment: :center, validation: proc { true }, continuous_action: nil)
-    @title = title
-    @value  = default_value
-    @cursor = cursor
+  def initialize(title: "", description: "", default_value: "", cursor: "_", size: 2, alignment: :center, validation: proc { true }, continuous_action: nil)
+    @title             = title
+    @description_lines = description.split("\n")
+    @value             = default_value
+    @cursor            = cursor
 
     @size_enum      = size
     @alignment_enum = %i[left center right].index(alignment)
+
+    _, @line_height = gtk.calcstringbox("text", @size_enum)
 
     @validation        = validation
     @continuous_action = continuous_action
@@ -31,12 +34,24 @@ class Prompt < Tool
       @cursor = @cursor == " " ? "_" : " " if cursor_blink
 
       run_continuous_action
-      @updated_labels << {
-        x: grid.left.shift_right(@x), y: grid.bottom.shift_up(@y),
-        text: "#{@title} #{@value}#{@cursor}",
-        size_enum: @size_enum,
-        alignment_enum: @alignment_enum
-      }
+        @updated_labels << [
+          {
+            x: grid.left.shift_right(@x), y: grid.bottom.shift_up(@y),
+            text: "#{@title} #{@value}#{@cursor}",
+            size_enum: @size_enum,
+            alignment_enum: @alignment_enum
+          },
+          @description_lines.map.with_index do |description_line, line_number|
+            line_number += 1
+            {
+              x: grid.left.shift_right(@x), y: grid.bottom.shift_up(@y + @line_height * (@description_lines.count - line_number + 1)),
+              text: "#{description_line}",
+              size_enum: @size_enum,
+              alignment_enum: @alignment_enum,
+              r: 128, g: 128, b: 128
+            }
+          end
+        ]
     end
 
     @last_value_size = @value.size
@@ -70,11 +85,13 @@ class Prompt < Tool
     return if text.to_s.empty?
 
     @updated_labels << {
-      x: grid.left.shift_right(@x), y: grid.bottom.shift_up(@y - 25),
+      x: grid.left.shift_right(@x), y: grid.bottom.shift_up(@y - @line_height),
       text: text,
       size_enum: 1,
-      alignment_enum: 1
-    }
+      alignment_enum: 1,
+    }.label!.tap do |label|
+      label.merge!(r: 255, g: 0, b: 0) unless valid
+    end
   end
 
   def cursor_blink?

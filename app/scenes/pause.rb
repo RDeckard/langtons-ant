@@ -1,10 +1,18 @@
 class Pause < Scene
-  def initialize
+  def initialize(current_step:)
+    @current_step = current_step
     @text_box = TextBox.new(text_lines, text_alignment: :right)
   end
 
   def tick
-    render_text_box
+    outputs.labels << {
+      x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+      text: "current step: #{@current_step}",
+      size_enum: 2,
+      alignment_enum: 2
+    }.label!
+
+    render
 
     return_game if inputs.keyboard.key_down.enter || inputs.mouse.click
   end
@@ -28,17 +36,15 @@ class Pause < Scene
     ]
   end
 
-  def render_text_box
-    return if @draw_ui
+  def render
+    return if @render
 
-    outputs.static_debug << @text_box.primitives
+    outputs.static_primitives << @text_box.primitives
 
-    @draw_ui = true
+    @render = true
   end
 
   def return_game
-    outputs.static_debug.clear
-
     state.current_scene = state.last_scene
   end
 end

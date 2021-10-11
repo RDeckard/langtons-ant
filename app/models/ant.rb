@@ -1,4 +1,6 @@
 class Ant < Model
+  include Spriteable
+
   IMAGE = "assets/images/ant.png".freeze
   IMAGE_HEIGHT = 351
   IMAGE_WIDTH  = 251
@@ -9,18 +11,13 @@ class Ant < Model
     @x = x
     @y = y
     @cells_grid = cells_grid
-    @path       = IMAGE
 
     @direction  = game_params.start_direction.to_sym
     @color_rules = game_params.color_rules.chars
   end
 
-  def primitive_marker
-    :sprite
-  end
-
   def react_to_cell!(cell)
-    case @color_rules[cell]
+    case @color_rules[cell.value]
     when "L" then turn_left!
     when "R" then turn_right!
     when "N"
@@ -67,18 +64,14 @@ class Ant < Model
     end
   end
 
-  def draw_override(ffi_draw)
-    ffi_draw.draw_sprite_3(
-      @cells_grid.cell_width * @x + ant_dimensions[:xoffset],  # x
-      @cells_grid.cell_height * @y + ant_dimensions[:yoffset], # y
-      ant_dimensions[:width], ant_dimensions[:height],         # w, h
-      @path, sprite_angle,                                     # path, sprite_angle,
-      nil, nil, nil, nil,                                      # alpha, red_saturation, green_saturation, blue_saturation
-      nil, nil, nil, nil,                                      # tile_x, tile_y, tile_w, tile_h,
-      nil, nil,                                                # flip_horizontally, flip_vertically,
-      0.5, 0.5,                                                # angle_anchor_x, angle_anchor_y,
-      nil, nil, nil, nil                                       # source_x, source_y, source_w, source_h
-    )
+  def draw_parameters
+    {
+      x: @cells_grid.cell_width * @x + ant_dimensions[:xoffset],
+      y: @cells_grid.cell_height * @y + ant_dimensions[:yoffset],
+      w: ant_dimensions[:width], h: ant_dimensions[:height],
+      path: IMAGE, angle: sprite_angle,
+      angle_anchor_x: 0.5, angle_anchor_y: 0.5
+    }
   end
 
   def sprite_angle

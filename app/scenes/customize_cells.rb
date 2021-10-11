@@ -3,60 +3,74 @@ class CustomizeCells < Scene
     grid_width  = state.game_params.screen_size
     grid_height = grid_width * 9/16
     @cells_grid = CellsGrid.new(grid_width, grid_height, state.game_params)
+
+    @ant = Ant.new(
+      @cells_grid.width.div(2), @cells_grid.height.div(2),
+      @cells_grid,
+      state.game_params
+    )
   end
 
   def tick
+    handler_inputs
+
+    render
+
     next_scene if inputs.keyboard.key_down.enter
-
-    render_gridlines
-
-    render_cells if handler_inputs
   end
 
   def handler_inputs
-    cells_grid_updated = false
-
     cell_x = (inputs.mouse.x / @cells_grid.cell_width).to_i
     cell_y = (inputs.mouse.y / @cells_grid.cell_height).to_i
 
     if inputs.mouse.click
       @start_cell_x     = cell_x
       @start_cell_y     = cell_y
-      @start_cell_value = @cells_grid.cell(cell_x, cell_y)
+      @start_cell_value = @cells_grid.cell(cell_x, cell_y).value
     end
 
     if cell_x == @start_cell_x && cell_y == @start_cell_y
-      if inputs.mouse.up
-        @cells_grid.cycle_cell!(cell_x, cell_y)
-        cells_grid_updated = true
-      end
+      @cells_grid.cycle_cell!(cell_x, cell_y) if inputs.mouse.up
     elsif inputs.mouse.button_left
-      unless cell_x == @last_cell_set_x && cell_y == @last_cell_set_y
-        @cells_grid.set_cell!(cell_x, cell_y, @start_cell_value)
-        cells_grid_updated = true
-      end
+      @cells_grid.set_cell_value!(cell_x, cell_y, @start_cell_value) unless cell_x == @last_cell_set_x &&
+                                                                            cell_y == @last_cell_set_y
 
       @last_cell_set_x = cell_x
       @last_cell_set_y = cell_y
     end
-
-    cells_grid_updated
   end
 
-  def render_cells
-    outputs.static_sprites.clear
-    outputs.static_sprites << @cells_grid.cells
-  end
+  def render
+    return if @render
 
-  def render_gridlines
-    return if @render_gridlines
+    outputs.static_primitives.clear
+    outputs.static_primitives << @cells_grid.cells
+    outputs.static_primitives << @ant
+    outputs.static_primitives << @cells_grid.lines
 
-    outputs.static_lines << @cells_grid.lines
+    outputs.static_primitives << [
+      {
+        x: grid.left.shift_right(5), y: grid.bottom.shift_up(45),
+        text: "Click to add color cells",
+        size_enum: 2
+      }.label!,
+      {
+        x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
+        text: "Click and drag from a colored cell to draw",
+        size_enum: 2
+      }.label!,
+      {
+        x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+        text: "ENTER: Start",
+        size_enum: 2,
+        alignment_enum: 2
+      }.label!
+    ]
 
-    @render_gridlines = true
+    @render = true
   end
 
   def next_scene
-    state.current_scene = LangtonsAnt.new(@cells_grid)
+    state.current_scene = LangtonsAnt.new(@cells_grid, @ant)
   end
 end

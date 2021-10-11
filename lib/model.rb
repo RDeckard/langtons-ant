@@ -4,6 +4,6 @@ class Model
   private
 
   def grid
-    @grid ||= $gtk.args.grid
+    $gtk.args.grid
   end
 end

@@ -4,22 +4,22 @@ class Scene
   private
 
   def gtk
-    @gtk ||= $gtk
+    $gtk
   end
 
   def state
-    @state ||= gtk.args.state
+    $gtk.args.state
   end
 
   def inputs
-    @inputs ||= gtk.args.inputs
+    $gtk.args.inputs
   end
 
   def outputs
-    @outputs ||= gtk.args.outputs
+    $gtk.args.outputs
   end
 
   def grid
-    @grid ||= gtk.args.grid
+    $gtk.args.grid
   end
 end
