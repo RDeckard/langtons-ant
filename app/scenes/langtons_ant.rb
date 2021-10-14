@@ -19,16 +19,21 @@ class LangtonsAnt < GTKObject
       alignment_enum: 2
     }.label!
 
-    return if @stop
+    @cells_updated = []
 
-    if @ticks_per_move >= 1
-      move_ant if (state.tick_count % @ticks_per_move).zero?
-    else
-      @steps_per_sec.div(60).times do
-        move_ant
-        break if @stop
+    unless @stop
+      if @ticks_per_move >= 1
+        move_ant if (state.tick_count % @ticks_per_move).zero?
+      else
+        @steps_per_sec.div(60).times do
+          move_ant
+          break if @stop
+        end
       end
     end
+
+    outputs[:cells_grid].clear_before_render = false
+    outputs[:cells_grid].primitives << @cells_updated
 
     render
 
@@ -38,6 +43,7 @@ class LangtonsAnt < GTKObject
   def move_ant
     @ant.react_to_cell!(@cells_grid.cell(@ant.x, @ant.y))
     @cells_grid.cycle_cell!(@ant.x, @ant.y)
+    @cells_updated << @cells_grid.cell(@ant.x, @ant.y)
     @ant.move_forward!
 
     if @ant.x.between?(0, @cells_grid.width - 1) && @ant.y.between?(0, @cells_grid.height - 1)
@@ -62,12 +68,13 @@ class LangtonsAnt < GTKObject
   end
 
   def render
+    outputs.primitives << grid.rect.to_hash.sprite!(path: :cells_grid)
+
     return if @render
 
     outputs.static_primitives.clear
-    outputs.static_primitives << @cells_grid.cells
     outputs.static_primitives << @ant
-    outputs.static_primitives << @cells_grid.lines
+    outputs.static_primitives << grid.rect.to_hash.sprite!(path: :grid_lines)
 
     outputs.static_primitives << {
       x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),

@@ -37,6 +37,8 @@ class Pause < GTKObject
   end
 
   def render
+    outputs.primitives << grid.rect.to_hash.sprite!(path: :cells_grid)
+
     return if @render
 
     outputs.static_primitives << @text_box.primitives

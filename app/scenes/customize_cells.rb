@@ -9,6 +9,13 @@ class CustomizeCells < GTKObject
       @cells_grid,
       state.game_params
     )
+
+    outputs[:cells_grid].clear
+    outputs[:cells_grid].primitives << @cells_grid.cells
+
+    outputs[:grid_lines].clear
+    outputs[:grid_lines].background_color = [0, 0, 0, 0]
+    outputs[:grid_lines].static_primitives << @cells_grid.lines
   end
 
   def tick
@@ -30,23 +37,31 @@ class CustomizeCells < GTKObject
     end
 
     if cell_x == @start_cell_x && cell_y == @start_cell_y
-      @cells_grid.cycle_cell!(cell_x, cell_y) if inputs.mouse.up
+      if inputs.mouse.up
+        cell_updated = true
+        @cells_grid.cycle_cell!(cell_x, cell_y)
+      end
     elsif inputs.mouse.button_left
+      cell_updated = true
       @cells_grid.set_cell_value!(cell_x, cell_y, @start_cell_value) unless cell_x == @last_cell_set_x &&
                                                                             cell_y == @last_cell_set_y
 
       @last_cell_set_x = cell_x
       @last_cell_set_y = cell_y
     end
+
+    outputs[:cells_grid].clear_before_render = false
+    outputs[:cells_grid].primitives << @cells_grid.cell(cell_x, cell_y) if cell_updated
   end
 
   def render
+    outputs.primitives << grid.rect.to_hash.sprite!(path: :cells_grid)
+
     return if @render
 
     outputs.static_primitives.clear
-    outputs.static_primitives << @cells_grid.cells
     outputs.static_primitives << @ant
-    outputs.static_primitives << @cells_grid.lines
+    outputs.static_primitives << grid.rect.to_hash.sprite!(path: :grid_lines)
 
     outputs.static_primitives << [
       {

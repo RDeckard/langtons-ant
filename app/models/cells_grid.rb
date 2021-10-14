@@ -88,7 +88,6 @@ class CellsGrid < GTKObject
     current_cell.value += 1
     current_cell.value =  0 if current_cell.value == @number_of_colors
     current_cell.color = @colors[current_cell.value]
-    current_cell.touched!
   end
 
   def set_cell_value!(x, y, value)
@@ -97,7 +96,6 @@ class CellsGrid < GTKObject
 
       current_cell.value = value
       current_cell.color = @colors[value]
-      current_cell.touched!
     end
   end
 
@@ -154,24 +152,12 @@ class CellsGrid < GTKObject
       @color = color
     end
 
-    def touched!
-      @touched = true
-    end
-
-    def to_render?
-      @touched && !@value.zero?
-    end
-
     def static_draw_parameters
       @static_draw_parameters ||= { x: @x, y: @y, w: @w, h: @h }
     end
 
     def draw_parameters
       static_draw_parameters.merge(@color)
-    end
-
-    def draw_override(_)
-      super if to_render?
     end
   end
 end
