@@ -28,7 +28,7 @@ class TitleScreen < GTKObject
       }.label!,
       {
         x: grid.left.shift_right(5), y: grid.bottom.shift_up(45),
-        text: "GitHub: https://github.com/RDeckard/langtons_ant/",
+        text: "GitHub: https://github.com/RDeckard/langtons-ant/",
         r: 128, g: 128, b: 128
       }.label!,
       {

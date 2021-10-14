@@ -1,0 +1,3 @@
+[submodule "lib/rddr-libs"]
+	path = lib/rddr-libs
+	url = git@github.com:RDeckard/rddr-libs.git
