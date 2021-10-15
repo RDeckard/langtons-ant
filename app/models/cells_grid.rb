@@ -49,13 +49,13 @@ class CellsGrid < GTKObject
 
     @number_of_colors = game_params.number_of_colors
 
-    color_palette = game_params.color_palette.to_sym
+    color_set = game_params.color_set.to_sym
     @colors =
       WHITE_AND_BLACK.dup.concat(
-        if color_palette == :random
+        if color_set == :random
           colors = COLORS.values.sample.shuffle
         else
-          COLORS[color_palette].dup
+          COLORS[color_set].dup
         end
       )
 

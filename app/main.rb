@@ -7,7 +7,7 @@ require "lib/rddr-libs/tools/text_box.rb"
 require "app/models/cells_grid.rb"
 require "app/models/ant.rb"
 require "app/scenes/title_screen.rb"
-require "app/scenes/conf_menu.rb"
+require "app/scenes/settings.rb"
 require "app/scenes/customize_cells.rb"
 require "app/scenes/langtons_ant.rb"
 require "app/scenes/pause.rb"
@@ -27,5 +27,5 @@ def set_defaults
   $gtk.args.state.game_params.start_direction     = "up"
   $gtk.args.state.game_params.steps_per_sec       = 600
   $gtk.args.state.game_params.out_of_bound_policy = "stop"
-  $gtk.args.state.game_params.color_palette       = "random"
+  $gtk.args.state.game_params.color_set           = "random"
 end

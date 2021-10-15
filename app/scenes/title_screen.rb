@@ -61,6 +61,6 @@ class TitleScreen < GTKObject
   def next_scene
     outputs.static_primitives.clear
 
-    state.current_scene = ConfMenu.new
+    state.current_scene = Settings.new
   end
 end

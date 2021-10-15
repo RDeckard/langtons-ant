@@ -14,25 +14,30 @@ class Pause < GTKObject
 
     render
 
-    return_game if inputs.keyboard.key_down.enter || inputs.mouse.click
+    return_to_game     if inputs.keyboard.key_down.enter || inputs.mouse.click
+    return_to_settings if inputs.keyboard.key_down.escape
   end
 
   def text_lines
     [
       "PAUSE",
+      "",
       "--- Shortcuts ---",
-      "Toggle fullscreen: Alt+F",
       "Pause: Click or ENTER",
+      "Change settings: ESCAPE",
+      "",
+      "Toggle fullscreen: Alt+F",
       "Reset: Alt+R",
       "Quit: Alt+Q",
+      "",
       "--- Configuration ---",
-      "Screen size: #{state.game_params.screen_size}",
+      "Grid width: #{state.game_params.screen_size}",
       "Number of colors: #{state.game_params.number_of_colors}",
       "Color rules: #{state.game_params.color_rules}",
       "Start direction: #{state.game_params.start_direction}",
-      "Step per second: #{state.game_params.steps_per_sec}",
+      "Steps per second: #{state.game_params.steps_per_sec}",
       "Out of bound policy: #{state.game_params.out_of_bound_policy}",
-      "Color palette: #{state.game_params.color_palette}"
+      "Color set: #{state.game_params.color_set}"
     ]
   end
 
@@ -46,7 +51,11 @@ class Pause < GTKObject
     @render = true
   end
 
-  def return_game
+  def return_to_game
     state.current_scene = state.last_scene
+  end
+
+  def return_to_settings
+    state.current_scene = Settings.new
   end
 end

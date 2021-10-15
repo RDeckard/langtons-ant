@@ -1,4 +1,4 @@
-class ConfMenu < GTKObject
+class Settings < GTKObject
   def initialize
     @menu = Menu.new(prompts: prompts)
   end
@@ -39,8 +39,9 @@ class ConfMenu < GTKObject
   def prompts
     @prompts ||= [
       Prompt.new(
-        title:         "Screen width:",
-        description:   "In pixels, the height will be computed with a 16/9 ratio.",
+        title:         "Grid width:",
+        description:   "What is the size of the grid?" +
+                       "\n\nPossible values: the height will be computed with a 16/9 ratio, and both must be integers.",
         default_value: state.game_params.screen_size.to_s,
         validation:    lambda do |input|
                          input = Integer(input) rescue nil
@@ -57,56 +58,45 @@ class ConfMenu < GTKObject
                                ok            = (screen_height % 1).zero?
                                screen_height = screen_height.to_i if ok
 
-                               [true, "Screen height: #{screen_height} (#{ok ? "OK" : "KO"})"]
+                               [true, "Grid height: #{screen_height} (#{ok ? "OK" : "KO"})"]
                              else
                                [false, "Integer only (for both)!"]
                              end
                            end
       ),
       Prompt.new(
-        title:         "Nb of colors:",
-        description:   "from 2 to 16",
-        default_value: state.game_params.number_of_colors.to_s,
-        validation:    lambda do |input|
-                         input = Integer(input) rescue nil
-                         return unless input && input >= 2 && input <= 16
-
-                         state.game_params.number_of_colors = input
-                         true
-                       end,
-        continuous_action: lambda do |input|
-                             input = Integer(input) rescue nil
-
-                             input ? true : [false, "Numbers only!"]
-                           end
-      ),
-      Prompt.new(
         title:         "Color rules:",
-        description:   %(R for Right, L for Left, U for U turn, N for "keep going".) +
-                       %(\nE.g.: "RLR" means "Turn Right on the 1st color, Left on the 2nd, etc.),
+        description:   "Rules of movement of the ant?" +
+                       "\n(The number of colors will match with the number of rules.)" +
+                       "\n\nPossible values: from 2 to 16 rules," +
+                       %(\n"R" for Right, "L" for Left, "U" for u-turn, "N" for "keep going".) +
+                       %(\nE.g.: "RLR" means "Turn Right on the 1st color, Left on the 2nd and Right on the 3rd".),
         default_value: state.game_params.color_rules.to_s,
         validation:    lambda do |input|
                          input = input.upcase
-                         return unless input.delete("LRNU").size.zero? && input.size == state.game_params.number_of_colors
+                         return unless input.delete("LRNU").size.zero? && input.size >= 2 && input.size <= 16
 
-                         state.game_params.color_rules = input
+                         state.game_params.color_rules      = input
+                         state.game_params.number_of_colors = input.size
                          true
                        end,
         continuous_action: lambda do |input|
-                             number_of_colors = state.game_params.number_of_colors
-
-                             if input.size > number_of_colors
-                               [false, "Too many rules (> #{number_of_colors})"]
+                             if input.size < 2
+                               [true, "Too few rules (< 2)"]
+                             elsif input.size > 16
+                               [false, "Too many rules (> 16)"]
                              elsif !["R", "L", "N", "U", nil].include?(input[-1]&.upcase)
                                [false, %("#{input[-1]}" isn't a valid rule, please choose "R", "L", "N" or "U".)]
                              else
-                               [true, "#{input.size}/#{number_of_colors}"]
+                               classic = input.size == 2 && input.chars.sort.join == "LR"
+                               [true, "#{input.size} colors#{" (classic mode)" if classic }"]
                              end
                            end
       ),
       Prompt.new(
         title:         "Start direction:",
-        description:   "up, down, left or right",
+        description:   %(Which direction does the Ant face at first?) +
+                       %(\n\nPossible values: "up", "down", "left" or "right"),
         default_value: state.game_params.start_direction.to_s,
         validation:    lambda do |input|
                          input = input.downcase
@@ -117,8 +107,10 @@ class ConfMenu < GTKObject
                        end
       ),
       Prompt.new(
-        title:         "Step per second:",
-        description:   "from 1 to 60, or multiple of 60 for high speed.",
+        title:         "Steps per second:",
+        description:   "How many steps per second should the ant execute?" +
+                       "\n\nPossible values: from 1 to 60, or multiple of 60 for high speed." +
+                       "\n(Very high values like 6000 or 12000 are perfectly acceptable.)",
         default_value: state.game_params.steps_per_sec.to_s,
         validation:    lambda do |input|
                          input = Integer(input) rescue nil
@@ -136,7 +128,7 @@ class ConfMenu < GTKObject
       Prompt.new(
         title:         "Out of bound policy:",
         description:   "What the ant should do when it get out of the screen?" +
-                       %(\n"backward", "warp" (on the other side) or "stop"),
+                       %(\n\nPossible values: "backward", "warp" (on the other side) or "stop"),
         default_value: state.game_params.out_of_bound_policy.to_s,
         validation:    lambda do |input|
                          input = input.downcase
@@ -147,15 +139,16 @@ class ConfMenu < GTKObject
                        end
       ),
       Prompt.new(
-        title:         "Color palette:",
-        description:   "random, classic or c64 (Commodore 64 color palette)." +
-                       %(\n"random" will also scramble the colors order (except white and black)),
-        default_value: state.game_params.color_palette.to_s,
+        title:         "Color set:",
+        description:   "Which color set will be used?" +
+                       "\n\nPossible values: classic, c64 (Commodore 64 color palette) or random." +
+                       %(\n("random" will also scramble the colors order, except white and black.)),
+        default_value: state.game_params.color_set.to_s,
         validation:    lambda do |input|
                          input = input.downcase
                          return unless %w[random classic c64].include?(input)
 
-                         state.game_params.color_palette = input
+                         state.game_params.color_set = input
                          true
                        end
       )

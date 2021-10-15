@@ -1,8 +1,8 @@
 class CustomizeCells < GTKObject
   def initialize
-    grid_width  = state.game_params.screen_size
-    grid_height = grid_width * 9/16
-    @cells_grid = CellsGrid.new(grid_width, grid_height, state.game_params)
+    screen_size = state.game_params.screen_size
+    grid_height = screen_size * 9/16
+    @cells_grid = CellsGrid.new(screen_size, grid_height, state.game_params)
 
     @ant = Ant.new(
       @cells_grid.width.div(2), @cells_grid.height.div(2),
