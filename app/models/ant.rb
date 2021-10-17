@@ -5,7 +5,7 @@ class Ant < GTKObject
   IMAGE_HEIGHT = 351
   IMAGE_WIDTH  = 251
 
-  attr_reader :x, :y
+  attr_accessor :x, :y
 
   def initialize(x, y, cells_grid, game_params)
     @x = x
