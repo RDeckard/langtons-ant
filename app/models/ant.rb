@@ -1,5 +1,5 @@
-class Ant < GTKObject
-  include Spriteable
+class Ant < RDDR::GTKObject
+  include RDDR::Spriteable
 
   IMAGE = "assets/images/ant.png".freeze
   IMAGE_HEIGHT = 351

@@ -1,4 +1,4 @@
-class LangtonsAnt < GTKObject
+class LangtonsAnt < RDDR::GTKObject
   def initialize(cells_grid, ant)
     @cells_grid = cells_grid
     @ant = ant
@@ -13,8 +13,14 @@ class LangtonsAnt < GTKObject
 
   def tick
     outputs.labels << {
-      x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+      x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
       text: "current step: #{@step}",
+      size_enum: 2
+    }.label!
+
+    outputs.labels << {
+      x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+      text: "Click/ENTER: pause & details",
       size_enum: 2,
       alignment_enum: 2
     }.label!
@@ -37,7 +43,7 @@ class LangtonsAnt < GTKObject
 
     render
 
-    pause if inputs.keyboard.key_down.enter || inputs.mouse.click
+    pause if inputs.keyboard.key_down.enter || inputs.pointer.left_click
   end
 
   def move_ant
@@ -75,12 +81,6 @@ class LangtonsAnt < GTKObject
     outputs.static_primitives.clear
     outputs.static_primitives << @ant
     outputs.static_primitives << grid.rect.to_hash.sprite!(path: :grid_lines)
-
-    outputs.static_primitives << {
-      x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
-      text: "Click/ENTER: pause & details",
-      size_enum: 2
-    }.label!
 
     @render = true
   end

@@ -1,43 +1,8 @@
-class CellsGrid < GTKObject
+class CellsGrid < RDDR::GTKObject
   WHITE_AND_BLACK = [
-      { r: 255, g: 255, b: 255 }.freeze,
-      { r: 0,   g: 0,   b: 0 }.freeze,
-    ].freeze
-
-  COLORS = {
-    classic: [
-      { r: 255, g: 0,   b: 0 }.freeze,
-      { r: 0,   g: 255, b: 0 }.freeze,
-      { r: 0,   g: 0,   b: 255 }.freeze,
-      { r: 255, g: 255, b: 0 }.freeze,
-      { r: 0,   g: 255, b: 255 }.freeze,
-      { r: 255, g: 0,   b: 255 }.freeze,
-      { r: 192, g: 192, b: 192 }.freeze,
-      { r: 128, g: 128, b: 128 }.freeze,
-      { r: 128, g: 0,   b: 0 }.freeze,
-      { r: 128, g: 128, b: 0 }.freeze,
-      { r: 0,   g: 128, b: 0 }.freeze,
-      { r: 128, g: 0,   b: 128 }.freeze,
-      { r: 0,   g: 128, b: 128 }.freeze,
-      { r: 0,   g: 0,   b: 128 }.freeze
-    ].freeze,
-    c64: [
-      { r: 136, g: 0,   b: 0 }.freeze,
-      { r: 170, g: 255, b: 238 }.freeze,
-      { r: 204, g: 68,  b: 204 }.freeze,
-      { r: 0,   g: 204, b: 85 }.freeze,
-      { r: 0,   g: 0,   b: 170 }.freeze,
-      { r: 238, g: 238, b: 119 }.freeze,
-      { r: 221, g: 136, b: 85 }.freeze,
-      { r: 102, g: 68,  b: 0 }.freeze,
-      { r: 255, g: 119, b: 119 }.freeze,
-      { r: 51,  g: 51,  b: 51 }.freeze,
-      { r: 119, g: 119, b: 119 }.freeze,
-      { r: 170, g: 255, b: 102 }.freeze,
-      { r: 0,   g: 136, b: 255 }.freeze,
-      { r: 187, g: 187, b: 187 }.freeze
-    ].freeze
-  }.freeze
+    { r: 255, g: 255, b: 255 }.freeze,
+    { r: 0,   g: 0,   b: 0 }.freeze,
+  ].freeze
 
   DEFAULT_CELL_COLOR_INDEX = 0
 
@@ -53,9 +18,9 @@ class CellsGrid < GTKObject
     @colors =
       WHITE_AND_BLACK.dup.concat(
         if color_set == :random
-          colors = COLORS.values.sample.shuffle
+          RDDR::Colors::SETS.values.sample.values[2..-1].shuffle!
         else
-          COLORS[color_set].dup
+          RDDR::Colors::SETS[color_set].values
         end
       )
 
@@ -133,8 +98,8 @@ class CellsGrid < GTKObject
     @lines
   end
 
-  class Cell < GTKObject
-    include Spriteable
+  class Cell < RDDR::GTKObject
+    include RDDR::Spriteable
 
     attr_reader :x_grid, :y_grid
     attr_accessor :value, :color

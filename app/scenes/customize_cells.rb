@@ -1,4 +1,4 @@
-class CustomizeCells < GTKObject
+class CustomizeCells < RDDR::GTKObject
   def initialize
     screen_size = state.game_params.screen_size
     grid_height = screen_size * 9/16
@@ -23,14 +23,14 @@ class CustomizeCells < GTKObject
 
     render
 
-    next_scene if inputs.keyboard.key_down.enter
+    next_scene if inputs.keyboard.key_down.enter || inputs.pointer.right_click
   end
 
   def handler_inputs
     cell_x = (inputs.mouse.x / @cells_grid.cell_width).to_i
     cell_y = (inputs.mouse.y / @cells_grid.cell_height).to_i
 
-    if inputs.mouse.click
+    if inputs.pointer.left_click
       @start_cell_x     = cell_x
       @start_cell_y     = cell_y
       @start_cell_value = @cells_grid.cell(cell_x, cell_y).value
@@ -76,7 +76,7 @@ class CustomizeCells < GTKObject
       }.label!,
       {
         x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
-        text: "ENTER: Start",
+        text: "Right click/ENTER: Start",
         size_enum: 2,
         alignment_enum: 2
       }.label!

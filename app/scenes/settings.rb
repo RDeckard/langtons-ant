@@ -1,6 +1,6 @@
-class Settings < GTKObject
+class Settings < RDDR::GTKObject
   def initialize
-    @menu = Menu.new(prompts: prompts)
+    @menu = RDDR::Menu.new(prompts: prompts)
   end
 
   def tick
@@ -18,7 +18,7 @@ class Settings < GTKObject
       }.label!,
       {
         x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
-        text: "ESCAPE: Previous/exit",
+        text: "Right click/ESCAPE: Previous/exit",
         size_enum: 2
       }.label!,
       {
@@ -38,7 +38,7 @@ class Settings < GTKObject
 
   def prompts
     @prompts ||= [
-      Prompt.new(
+      RDDR::Prompt.new(
         title:         "Grid width:",
         description:   "What is the size of the grid?" +
                        "\n\nPossible values: the height will be computed with a 16/9 ratio, and both must be integers.",
@@ -64,7 +64,7 @@ class Settings < GTKObject
                              end
                            end
       ),
-      Prompt.new(
+      RDDR::Prompt.new(
         title:         "Color rules:",
         description:   "Rules of movement of the ant?" +
                        "\n(The number of colors will match with the number of rules.)" +
@@ -93,7 +93,7 @@ class Settings < GTKObject
                              end
                            end
       ),
-      Prompt.new(
+      RDDR::Prompt.new(
         title:         "Start direction:",
         description:   %(Which direction does the Ant face at first?) +
                        %(\n\nPossible values: "up", "down", "left" or "right"),
@@ -106,7 +106,7 @@ class Settings < GTKObject
                          true
                        end
       ),
-      Prompt.new(
+      RDDR::Prompt.new(
         title:         "Steps per second:",
         description:   "How many steps per second should the ant execute?" +
                        "\n\nPossible values: from 1 to 60, or multiple of 60 for high speed." +
@@ -125,7 +125,7 @@ class Settings < GTKObject
                              input ? true : [false, "Numbers only!"]
                            end
       ),
-      Prompt.new(
+      RDDR::Prompt.new(
         title:         "Out of bound policy:",
         description:   "What the ant should do when it get out of the screen?" +
                        %(\n\nPossible values: "backward", "warp" (on the other side) or "stop"),
@@ -138,7 +138,7 @@ class Settings < GTKObject
                          true
                        end
       ),
-      Prompt.new(
+      RDDR::Prompt.new(
         title:         "Color set:",
         description:   "Which color set will be used?" +
                        "\n\nPossible values: classic, c64 (Commodore 64 color palette) or random." +

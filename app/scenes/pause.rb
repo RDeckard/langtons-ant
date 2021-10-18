@@ -1,21 +1,20 @@
-class Pause < GTKObject
+class Pause < RDDR::GTKObject
   def initialize(current_step:)
     @current_step = current_step
-    @text_box = TextBox.new(text_lines, box_alignment: :right, box_alignment_v: :top, text_alignment: :right)
+    @text_box = RDDR::TextBox.new(text_lines, box_alignment: :right, box_alignment_v: :top, text_alignment: :right)
   end
 
   def tick
     outputs.labels << {
-      x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+      x: grid.left.shift_right(5), y: grid.bottom.shift_up(25),
       text: "current step: #{@current_step}",
-      size_enum: 2,
-      alignment_enum: 2
+      size_enum: 2
     }.label!
 
     render
 
-    return_to_game     if inputs.keyboard.key_down.enter || inputs.mouse.click
-    return_to_settings if inputs.keyboard.key_down.escape
+    return_to_settings if inputs.keyboard.key_down.escape || inputs.pointer.right_click
+    return_to_game     if inputs.keyboard.key_down.enter  || inputs.pointer.left_click
   end
 
   def text_lines
@@ -24,7 +23,7 @@ class Pause < GTKObject
       "",
       "--- Shortcuts ---",
       "Pause: Click or ENTER",
-      "Change settings: ESCAPE",
+      "Change settings: Right Click or ESCAPE",
       "",
       "Toggle fullscreen: Alt+F",
       "Reset: Alt+R",

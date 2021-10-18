@@ -14,11 +14,9 @@ It's an extend [Langton's Ant](https://en.wikipedia.org/wiki/Langton%27s_ant) pl
 
 **Available options:**
 * Choose the size of the grid.
-* Choose the number of colors...
-* ... therefore choose the associated rules for each color
 * U (u-turn) and N (no turn) rules are also available (beside the classic R and L rules)
+* Choose from 2 to 16 rules (each rules generate one)
 * Freely edit the grid before start the Ant
 * Choose what the Ant should do when it get out of screen: stop, backward or warp to the other side
 * Choose the speed of the Ant (steps by sec)
-* Choose Commodore 64 color palette! 🤓​
-* PRO-TIP: just press ESCAPE on the first configuration prompt to stay with the default configuration.
+* Choose Commodore 64 color palette! 🤓

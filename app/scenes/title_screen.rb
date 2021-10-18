@@ -1,12 +1,29 @@
-class TitleScreen < GTKObject
+class TitleScreen < RDDR::GTKObject
+  ANT_IMAGE = "assets/images/ant.png".freeze
+
   def initialize
-    @text_box = TextBox.new(text_lines, text_alignment: :center)
+    @text_box = RDDR::TextBox.new(text_lines, box_alignment_v: grid.top.shift_down(grid.h/3), text_alignment: :center)
+
+    @start_button =
+      RDDR::Button.new(text: "Start", y: grid.bottom.shift_up(grid.h/6), w: grid.w/4, text_size: 4)
+    @start_button.x = geometry.center_inside_rect_x(@start_button.box, grid.rect).x
+
+    ant_space = { x: grid.left,  y: @start_button.box.top,
+                  w: grid.right, h: @text_box.box.bottom - @start_button.box.top }
+    @ant = { path: ANT_IMAGE, w: 128, h: 128 }.sprite!
+    @ant.merge!(geometry.center_inside_rect(@ant, ant_space))
   end
 
   def tick
     render
 
-    next_scene if inputs.keyboard.key_down.enter || inputs.mouse.click
+    handler_inputs
+  end
+
+  def handler_inputs
+    @start_button.handler_inputs { next_scene }
+
+    next_scene if inputs.keyboard.key_down.enter
   end
 
   def render
@@ -14,11 +31,9 @@ class TitleScreen < GTKObject
 
     outputs.static_primitives.clear
 
-    outputs.static_primitives << {
-      path: "assets/images/ant.png"
-    }.sprite!(geometry.center_inside_rect({w: 128, h: 128}, grid))
-
     outputs.static_primitives << @text_box.primitives
+    outputs.static_primitives << @start_button.primitives
+    outputs.static_primitives << @ant
 
     outputs.static_primitives << [
       {
@@ -38,7 +53,7 @@ class TitleScreen < GTKObject
       }.label!,
       {
         x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
-        text: "Click/ENTER: Start",
+        text: "ENTER: Start",
         size_enum: 2,
         alignment_enum: 2
       }.label!
