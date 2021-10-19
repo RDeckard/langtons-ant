@@ -151,6 +151,19 @@ class Settings < RDDR::GTKObject
                          state.game_params.color_set = input
                          true
                        end
+      ),
+      RDDR::Prompt.new(
+        title:         "Grid visibility:",
+        description:   "Should the grid be visible?" +
+                       "\n\nPossible values: enable, disable",
+        default_value: state.game_params.grid_visibility.to_s,
+        validation:    lambda do |input|
+                         input = input.downcase
+                         return unless %w[enable disable].include?(input)
+
+                         state.game_params.grid_visibility = input
+                         true
+                       end
       )
     ]
   end

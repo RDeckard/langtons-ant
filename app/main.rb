@@ -18,4 +18,5 @@ def set_defaults
   $gtk.args.state.game_params.steps_per_sec       = 600
   $gtk.args.state.game_params.out_of_bound_policy = "stop"
   $gtk.args.state.game_params.color_set           = "random"
+  $gtk.args.state.game_params.grid_visibility     = "disable"
 end

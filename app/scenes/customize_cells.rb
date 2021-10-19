@@ -11,11 +11,11 @@ class CustomizeCells < RDDR::GTKObject
     )
 
     outputs[:cells_grid].clear
-    outputs[:cells_grid].primitives << @cells_grid.cells
+    outputs[:cells_grid].background_color = [255, 255, 255, 255]
 
     outputs[:grid_lines].clear
     outputs[:grid_lines].background_color = [0, 0, 0, 0]
-    outputs[:grid_lines].static_primitives << @cells_grid.lines
+    outputs[:grid_lines].static_primitives << @cells_grid.lines if state.game_params.grid_visibility == "enable"
   end
 
   def tick
