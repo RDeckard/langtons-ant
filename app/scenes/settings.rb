@@ -1,15 +1,15 @@
 class Settings < RDDR::GTKObject
   def initialize
-    @menu = RDDR::Menu.new(prompts: prompts)
+    @text_inputs = RDDR::TextInputs.new(prompts: prompts)
   end
 
   def tick
-    next_scene if @menu.call == :done
+    next_scene if @text_inputs.call == :done
 
-    return if @menu.updated_labels.empty?
+    return unless @text_inputs.updated?
 
     outputs.static_primitives.clear
-    outputs.static_primitives << @menu.updated_labels
+    outputs.static_primitives << @text_inputs.primitives
     outputs.static_primitives << [
       {
         x: grid.left.shift_right(5), y: grid.top.shift_down(25),

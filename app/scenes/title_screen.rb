@@ -2,14 +2,14 @@ class TitleScreen < RDDR::GTKObject
   ANT_IMAGE = "assets/images/ant.png".freeze
 
   def initialize
-    @text_box = RDDR::TextBox.new(text_lines, box_alignment_v: grid.top.shift_down(grid.h/3), text_alignment: :center)
+    @text_box = RDDR::TextBox.new(text_lines, frame_alignment_v: grid.top.shift_down(grid.h/3), text_alignment: :center)
 
     @start_button =
       RDDR::Button.new(text: "Start", y: grid.bottom.shift_up(grid.h/6), w: grid.w/4, text_size: 4)
-    @start_button.x = geometry.center_inside_rect_x(@start_button.box, grid.rect).x
+    @start_button.x = geometry.center_inside_rect_x(@start_button.frame, grid.rect).x
 
-    ant_space = { x: grid.left,  y: @start_button.box.top,
-                  w: grid.right, h: @text_box.box.bottom - @start_button.box.top }
+    ant_space = { x: grid.left,  y: @start_button.frame.top,
+                  w: grid.right, h: @text_box.frame.bottom - @start_button.frame.top }
     @ant = { path: ANT_IMAGE, w: 128, h: 128 }.sprite!
     @ant.merge!(geometry.center_inside_rect(@ant, ant_space))
   end
