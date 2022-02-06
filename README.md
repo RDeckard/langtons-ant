@@ -1,6 +1,6 @@
 # Langton's Ant
 
-![Screenshot from 2021-10-11 14-49-59](https://user-images.githubusercontent.com/5458964/136793922-19f8efda-e3ab-44b9-a546-cbf432443809.png)
+![Screenshot from 2021-10-28 12-03-31](https://user-images.githubusercontent.com/5458964/139235019-c457072c-66ad-44f4-b3eb-86103dabfe5c.png)
 
 This is a DragonRuby Game Toolkit project that must be in a sub directory (e.g. `projects/`) of a directory where a DragonRuby binaries stands to be run in development environment.
 

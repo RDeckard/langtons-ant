@@ -5,8 +5,11 @@ class TitleScreen < RDDR::GTKObject
     @text_box = RDDR::TextBox.new(text_lines, frame_alignment_v: grid.top.shift_down(grid.h/3), text_alignment: :center)
 
     @start_button =
-      RDDR::Button.new(text: "Start", y: grid.bottom.shift_up(grid.h/6), w: grid.w/4, text_size: 4)
-    @start_button.x = geometry.center_inside_rect_x(@start_button.frame, grid.rect).x
+      RDDR::Button.new(text: "Start", y: grid.bottom.shift_up(grid.h/4), w: grid.w/4, text_size: 4)
+
+    @settings_button =
+      RDDR::Button.new(text: "Settings", y: grid.bottom.shift_up(grid.h/7), w: grid.w/4, text_size: 4)
+    @settings_button.x = @start_button.x = geometry.center_inside_rect_x(@start_button.frame, grid.rect).x
 
     ant_space = { x: grid.left,  y: @start_button.frame.top,
                   w: grid.right, h: @text_box.frame.bottom - @start_button.frame.top }
@@ -21,9 +24,10 @@ class TitleScreen < RDDR::GTKObject
   end
 
   def handler_inputs
-    @start_button.handler_inputs { next_scene }
+    @start_button.handler_inputs { start }
+    @settings_button.handler_inputs { settings }
 
-    next_scene if inputs.keyboard.key_down.enter
+    start if inputs.keyboard.key_down.enter
   end
 
   def render
@@ -33,6 +37,7 @@ class TitleScreen < RDDR::GTKObject
 
     outputs.static_primitives << @text_box.primitives
     outputs.static_primitives << @start_button.primitives
+    outputs.static_primitives << @settings_button.primitives
     outputs.static_primitives << @ant
 
     outputs.static_primitives << [
@@ -52,9 +57,13 @@ class TitleScreen < RDDR::GTKObject
         r: 128, g: 128, b: 128
       }.label!,
       {
-        x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+        x: grid.right.shift_left(5), y: grid.bottom.shift_up(45),
         text: "ENTER: Start",
-        size_enum: 2,
+        alignment_enum: 2
+      }.label!,
+      {
+        x: grid.right.shift_left(5), y: grid.bottom.shift_up(25),
+        text: "ESCAPE: Settings",
         alignment_enum: 2
       }.label!
     ]
@@ -73,7 +82,13 @@ class TitleScreen < RDDR::GTKObject
     ]
   end
 
-  def next_scene
+  def start
+    outputs.static_primitives.clear
+
+    state.current_scene = CustomizeCells.new
+  end
+
+  def settings
     outputs.static_primitives.clear
 
     state.current_scene = Settings.new
