@@ -1,7 +1,7 @@
 class Pause < RDDR::GTKObject
   def initialize(current_step:)
     @current_step = current_step
-    @text_box = RDDR::TextBox.new(text_lines, frame_alignment: :right, frame_alignment_v: :top, text_alignment: :right)
+    @text_box = RDDR::TextBox.new(text_lines, box_alignment: :right, box_alignment_v: :top, text_alignment: :right)
   end
 
   def tick

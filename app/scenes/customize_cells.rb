@@ -19,14 +19,14 @@ class CustomizeCells < RDDR::GTKObject
   end
 
   def tick
-    handler_inputs
+    handle_inputs
 
     render
 
     next_scene if inputs.keyboard.key_down.enter || inputs.pointer.right_click
   end
 
-  def handler_inputs
+  def handle_inputs
     cell_x = (inputs.mouse.x / @cells_grid.cell_width).to_i
     cell_y = (inputs.mouse.y / @cells_grid.cell_height).to_i
 
@@ -50,6 +50,7 @@ class CustomizeCells < RDDR::GTKObject
       @last_cell_set_y = cell_y
     end
 
+    outputs[:cells_grid].transient!
     outputs[:cells_grid].clear_before_render = false
     outputs[:cells_grid].primitives << @cells_grid.cell(cell_x, cell_y) if cell_updated
   end

@@ -38,6 +38,7 @@ class LangtonsAnt < RDDR::GTKObject
       end
     end
 
+    outputs[:cells_grid].transient!
     outputs[:cells_grid].clear_before_render = false
     outputs[:cells_grid].primitives << @cells_updated
 

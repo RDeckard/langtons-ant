@@ -2,30 +2,29 @@ class TitleScreen < RDDR::GTKObject
   ANT_IMAGE = "assets/images/ant.png".freeze
 
   def initialize
-    @text_box = RDDR::TextBox.new(text_lines, frame_alignment_v: grid.top.shift_down(grid.h/3), text_alignment: :center)
+    @text_box = RDDR::TextBox.new(text_lines, box_alignment_v: grid.top.shift_down(grid.h/3), text_alignment: :center)
 
     @start_button =
-      RDDR::Button.new(text: "Start", y: grid.bottom.shift_up(grid.h/4), w: grid.w/4, text_size: 4)
-
+      RDDR::Button.new(text: "Start", rect: { y: grid.bottom.shift_up(grid.h/4), w: grid.w/4 }, text_size: 4)
     @settings_button =
-      RDDR::Button.new(text: "Settings", y: grid.bottom.shift_up(grid.h/7), w: grid.w/4, text_size: 4)
-    @settings_button.x = @start_button.x = geometry.center_inside_rect_x(@start_button.frame, grid.rect).x
+      RDDR::Button.new(text: "Settings", rect: { y: grid.bottom.shift_up(grid.h/7), w: grid.w/4 }, text_size: 4)
+    @settings_button.rect.x = @start_button.rect.x = Geometry.center_inside_rect_x(@start_button.rect, grid.rect).x
 
-    ant_space = { x: grid.left,  y: @start_button.frame.top,
-                  w: grid.right, h: @text_box.frame.bottom - @start_button.frame.top }
+    ant_space = { x: grid.left,  y: @start_button.rect.top,
+                  w: grid.right, h: @text_box.rect.bottom - @start_button.rect.top }
     @ant = { path: ANT_IMAGE, w: 128, h: 128 }.sprite!
-    @ant.merge!(geometry.center_inside_rect(@ant, ant_space))
+    @ant.merge!(Geometry.center_inside_rect(@ant, ant_space))
   end
 
   def tick
     render
 
-    handler_inputs
+    handle_inputs
   end
 
-  def handler_inputs
-    @start_button.handler_inputs { start }
-    @settings_button.handler_inputs { settings }
+  def handle_inputs
+    @start_button.handle_inputs { start }
+    @settings_button.handle_inputs { settings }
 
     start if inputs.keyboard.key_down.enter
   end
